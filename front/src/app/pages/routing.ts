@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 
 const Routing: Routes = [
   {
@@ -46,6 +46,11 @@ const Routing: Routes = [
     path: 'apps/permissions',
     loadChildren: () => import('./permission/permission.module').then((m) => m.PermissionModule),
   },
+  // my modules
+  {
+    path: 'roles',
+    loadChildren: () => import('../modules/roles/roles.module').then((m) => m.RolesModule),
+  },
   {
     path: '',
     redirectTo: '/dashboard',
@@ -57,4 +62,4 @@ const Routing: Routes = [
   },
 ];
 
-export { Routing };
+export {Routing};

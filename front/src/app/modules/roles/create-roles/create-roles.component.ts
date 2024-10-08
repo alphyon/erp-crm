@@ -1,8 +1,11 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {SIDEBAR} from "../../../../config/config";
+import {RolesService} from "../service/roles.service";
+import {ToastrService} from "ngx-toastr";
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-create-roles',
@@ -16,11 +19,17 @@ import {SIDEBAR} from "../../../../config/config";
   styleUrl: './create-roles.component.scss'
 })
 export class CreateRolesComponent {
+  @Output() RoleC: EventEmitter<any> = new EventEmitter();
   name: string = '';
   isLoading: any;
-  SIDEBAR: any = SIDEBAR
+  SIDEBAR: any = SIDEBAR;
+  permissions: any = [];
 
-  constructor(public modal: NgbActiveModal) {
+  constructor(
+    public modal: NgbActiveModal,
+    public rolesService: RolesService,
+    public toast: ToastrService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -28,6 +37,41 @@ export class CreateRolesComponent {
   }
 
   store() {
+    if (!this.name) {
+      this.toast.warning("Validation", "Name is required");
+      return false;
+    }
 
+    if (this.permissions.length == 0) {
+      this.toast.warning("Validation", "You need select one permission");
+      return false;
+    }
+    let data = {
+      name: this.name,
+      permissions: this.permissions,
+    }
+    this.rolesService.registerRole(data).subscribe({
+      next: (response: any) => {
+        this.toast.success("Éxito", "Se ha creado el rol");
+        this.RoleC.emit(response.role);
+        this.modal.close();
+      },
+      error: (error: HttpResponse<any>) => {
+        if (error.status === 422) {
+          this.toast.error("Error", error.statusText);
+        }
+      }
+    })
+
+  }
+
+  addPermission(permission: string) {
+    let index = this.permissions.findIndex((perm: string) => permission == perm);
+
+    if (index != -1) {
+      this.permissions.slice(index, 1);
+    } else {
+      this.permissions.push(permission)
+    }
   }
 }

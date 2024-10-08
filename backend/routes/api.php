@@ -17,3 +17,9 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
     Route::post('/me', [AuthController::class, 'me'])->name('me');
 });
+
+Route::group([
+    'middleware' => ['auth:api'],
+], function ($router) {
+    Route::resource('roles', \App\Http\Controllers\RolePermissionController::class);
+});

@@ -1,1 +1,46 @@
-<p>delete-roles works!</p>
+<!--begin::Modal content-->
+<div class="modal-content">
+  <!--begin::Modal header-->
+  <div class="modal-header" id="kt_modal_add_user_header">
+    <!--begin::Modal title-->
+    <h2 class="fw-bolder">Delete Role: {{ RoleSelected.name }}</h2>
+
+    <!--end::Modal title-->
+    <!--begin::Close-->
+    <div (click)="modal.dismiss()" class="btn btn-icon btn-sm btn-active-icon-primary"
+         data-kt-users-modal-action="close">
+      <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+      <span class="svg-icon svg-icon-1">
+                <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <rect fill="currentColor" height="2" opacity="0.5" rx="1" transform="rotate(-45 6 17.3137)"
+                          width="16" x="6"
+                          y="17.3137"/>
+                    <rect fill="currentColor" height="2" rx="1" transform="rotate(45 7.41422 6)" width="16" x="7.41422"
+                          y="6"/>
+                </svg>
+            </span>
+      <!--end::Svg Icon-->
+    </div>
+    <!--end::Close-->
+  </div>
+  <!--end::Modal header-->
+  <!--begin::Modal body-->
+  <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+    <!--begin::Form-->
+    <form action="#" class="form" id="kt_modal_add_user_form">
+      <p>
+        ¿ESTAS SEGURO DE ELIMINAR ESTE ROL?
+      </p>
+      <div class="text-center pt-15">
+        <button (click)="modal.dismiss()" class="btn btn-light me-3" type="reset">Cerrar</button>
+        <button (click)="delete()" class="btn btn-danger" data-kt-users-modal-action="submit" type="button">
+          <span class="indicator-label">ELIMINAR</span>
+
+          <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+        </button>
+      </div>
+    </form>
+    <!--end::Form-->
+  </div>
+  <!--end::Modal body-->
+</div>

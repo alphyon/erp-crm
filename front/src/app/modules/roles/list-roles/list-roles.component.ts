@@ -4,6 +4,8 @@ import {CreateRolesComponent} from "../create-roles/create-roles.component";
 import {RolesService} from "../service/roles.service";
 import {FormsModule} from "@angular/forms";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
+import {EditRolesComponent} from "../edit-roles/edit-roles.component";
+import {DeleteRolesComponent} from "../delete-roles/delete-roles.component";
 
 @Component({
   selector: 'app-list-roles',
@@ -41,7 +43,7 @@ export class ListRolesComponent {
   createRol() {
     const modalRef = this.modalService.open(CreateRolesComponent, {centered: true, size: "xl"});
     modalRef.componentInstance.RoleC.subscribe((role: any) => {
-      this.roles.push(role);
+      this.roles.unshift(role);
     })
   }
 
@@ -58,4 +60,25 @@ export class ListRolesComponent {
     this.listRoles($event);
   }
 
+  editRole(rolEdit: any) {
+    const modalRef = this.modalService.open(EditRolesComponent, {centered: true, size: "xl"});
+    modalRef.componentInstance.RoleSelected = rolEdit;
+    modalRef.componentInstance.RoleE.subscribe((role: any) => {
+      let index = this.roles.findIndex((rol: any) => rol.id === rolEdit.id);
+      if (index != -1) {
+        this.roles[index] = role;
+      }
+    })
+  }
+
+  deleteRole(rolDelete: any) {
+    const modalRef = this.modalService.open(DeleteRolesComponent, {centered: true, size: "md"});
+    modalRef.componentInstance.RoleSelected = rolDelete;
+    modalRef.componentInstance.RoleD.subscribe((role: any) => {
+      let index = this.roles.findIndex((rol: any) => rol.id === rolDelete.id);
+      if (index != -1) {
+        this.roles.splice(index, 1);
+      }
+    })
+  }
 }

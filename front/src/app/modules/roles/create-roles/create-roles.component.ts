@@ -52,15 +52,16 @@ export class CreateRolesComponent {
     }
     this.rolesService.registerRole(data).subscribe({
       next: (response: any) => {
-        this.toast.success("Éxito", "Se ha creado el rol");
-        this.RoleC.emit(response.role);
+        this.toast.success("Éxito", response.body.message);
+        this.RoleC.emit(response.body.role);
         this.modal.close();
       },
       error: (error: HttpResponse<any>) => {
         if (error.status === 422) {
-          this.toast.error("Error", error.statusText);
+          this.toast.error("Error", "Ya existe el rol");
+          this.modal.close();
         }
-      }
+      },
     })
 
   }

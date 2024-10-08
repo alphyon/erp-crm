@@ -21,7 +21,7 @@ class RolePermissionController extends Controller
             'total' => $roles->total(),
             'roles' => $roles->map(function ($role) {
                 $role->permission_pluck = $role->permissions->pluck('name');
-                $role->created_at = $role->created_at->format('Y-m-d');
+                $role->created_at_format = $role->created_at->format('Y-m-d');
                 return $role;
             }),
         ]);
@@ -56,7 +56,8 @@ class RolePermissionController extends Controller
                 'name' => $role->name,
                 'permission_pluck' => $role->permissions->pluck('name'),
                 'permissions' => $role->permissions,
-                'created_at' => $role->created_at->format('Y-m-d H:i A'),
+                'created_at' => $role->created_at,
+                'created_at_format' => $role->created_at_format,
             ]
         ], 200);
     }
@@ -90,25 +91,26 @@ class RolePermissionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $isRole = Role::where('name', $request->get('name'))->where('id', '<>', $request->id)->first();
-        if ($isRole) {
-            return response()->json([
-                'message' => 'Role already exists',
-            ], 402);
-        }
+//        $isRole = Role::where('name', $request->get('name'))->where('id', '<>', $request->id)->first();
+//        if ($isRole) {
+//            return response()->json([
+//                'message' => 'Role already exists',
+//            ], 422);
+//        }
 
         $role = Role::findOrFail($id);
         $role->update($request->all());
         $role->syncPermissions($request->get('permissions'));
 
         return response()->json([
-            'message' => 'Role created successfully',
+            'message' => 'Role update successfully',
             'role' => [
                 'id' => $role->id,
                 'name' => $role->name,
                 'permission_pluck' => $role->permissions->pluck('name'),
                 'permissions' => $role->permissions,
-                'created_at' => $role->created_at->format('Y-m-d H:i A'),
+                'created_at' => $role->created_at,
+                'created_at_format' => $role->created_at->format('Y-m-d'),
             ]
         ], 200);
     }
